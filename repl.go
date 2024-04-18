@@ -3,18 +3,21 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"internal/pokeapi"
 	"os"
+	"strings"
 )
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, string) error
 }
 
 type config struct {
-	previous string
-	next     string
+	pokeapiClient pokeapi.Client
+	previous      string
+	next          string
 }
 
 type Location struct {
@@ -22,16 +25,20 @@ type Location struct {
 	URL  string
 }
 
-func start() {
+func start(cfg *config) {
 	commands := defineCommands()
 	cliName := "pokedex"
 	reader := bufio.NewScanner(os.Stdin)
 	printPrompt(cliName)
-	cfg := &config{}
 	for reader.Scan() {
-		text := reader.Text()
-		if command, exists := commands[text]; exists {
-			command.callback(cfg)
+		inputs := strings.Fields(reader.Text())
+		comm := inputs[0]
+		area := ""
+		if len(inputs) > 1 {
+			area = inputs[1]
+		}
+		if command, exists := commands[comm]; exists {
+			command.callback(cfg, area)
 		} else {
 			printUnkown(cliName)
 		}
@@ -68,6 +75,11 @@ func defineCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "Displays the previous 20 locations",
 			callback:    commandMapBack,
+		},
+		"explore": {
+			name:        "explore",
+			description: "Find pokemon in area",
+			callback:    commandExplore,
 		},
 	}
 }

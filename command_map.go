@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
-	"internal/pokeapi"
 )
 
-func commandMap(config *config) error {
-	res := pokeapi.MapLocations(config.next)
+func commandMap(config *config, area string) error {
+	res := config.pokeapiClient.MapLocations(config.next)
 
 	for _, location := range res.Results {
 		fmt.Println(location.Name)
@@ -16,8 +15,8 @@ func commandMap(config *config) error {
 	return nil
 }
 
-func commandMapBack(config *config) error {
-	res := pokeapi.MapLocations(config.previous)
+func commandMapBack(config *config, area string) error {
+	res := config.pokeapiClient.MapLocations(config.previous)
 
 	for _, location := range res.Results {
 		fmt.Println(location.Name)

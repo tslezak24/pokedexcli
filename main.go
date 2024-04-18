@@ -1,5 +1,14 @@
 package main
 
+import (
+	"internal/pokeapi"
+	"time"
+)
+
 func main() {
-	start()
+	pokeClient := pokeapi.NewClient(5*time.Second, time.Minute*5)
+	cfg := &config{
+		pokeapiClient: pokeClient,
+	}
+	start(cfg)
 }

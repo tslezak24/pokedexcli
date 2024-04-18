@@ -7,10 +7,20 @@ import (
 	"net/http"
 )
 
-func MapLocations(locationsURL string) Response {
+func (c *Client) MapLocations(locationsURL string) Response {
 	if locationsURL == "" {
 		locationsURL = url
 	}
+	if val, ok := c.cache.GetFromCache(locationsURL); ok {
+		response := Response{}
+		err := json.Unmarshal(val, &response)
+		if err != nil {
+			fmt.Println("Can not unmarshal JSON")
+		}
+
+		return response
+	}
+
 	res, err := http.Get(locationsURL)
 	if err != nil {
 		fmt.Print(err)
