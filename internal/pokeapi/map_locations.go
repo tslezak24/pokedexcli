@@ -9,7 +9,7 @@ import (
 
 func (c *Client) MapLocations(locationsURL string) Response {
 	if locationsURL == "" {
-		locationsURL = url
+		locationsURL = url + "location-area/"
 	}
 	if val, ok := c.cache.GetFromCache(locationsURL); ok {
 		response := Response{}

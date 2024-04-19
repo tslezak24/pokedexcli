@@ -8,7 +8,7 @@ import (
 )
 
 func (c *Client) ExploreArea(area string) Encounters {
-	exploreURL := url + "/" + area
+	exploreURL := url + "/location-area/" + area
 
 	if val, ok := c.cache.GetFromCache(exploreURL); ok {
 		response := Encounters{}
